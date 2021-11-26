@@ -3,21 +3,30 @@
 
 [![CircleCI](https://circleci.com/gh/AlexeyAB/darknet.svg?style=svg)](https://circleci.com/gh/AlexeyAB/darknet)
 
-* [Requirements](#requirements)
-* [Pre-trained models](#pre-trained-models)
-* [Explanations in issues](https://github.com/AlexeyAB/darknet/issues?q=is%3Aopen+is%3Aissue+label%3AExplanations)
-0. [Improvements in this repository](#improvements-in-this-repository)
-1. [How to use](#how-to-use)
-2. [How to compile on Linux](#how-to-compile-on-linux)
-3. [How to compile on Windows](#how-to-compile-on-windows)
-4. [How to train (Pascal VOC Data)](#how-to-train-pascal-voc-data)
-5. [How to train (to detect your custom objects)](#how-to-train-to-detect-your-custom-objects)
-6. [When should I stop training](#when-should-i-stop-training)
-7. [How to calculate mAP on PascalVOC 2007](#how-to-calculate-map-on-pascalvoc-2007)
-8. [How to improve object detection](#how-to-improve-object-detection)
-9. [How to mark bounded boxes of objects and create annotation files](#how-to-mark-bounded-boxes-of-objects-and-create-annotation-files)
-10. [Using Yolo9000](#using-yolo9000)
-11. [How to use Yolo as DLL and SO libraries](#how-to-use-yolo-as-dll-and-so-libraries)
+- [Yolo-v3 and Yolo-v2 for Windows and Linux](#yolo-v3-and-yolo-v2-for-windows-and-linux)
+    - [(neural network for object detection) - Tensor Cores can be used on Linux and [Windows](https://github.com/AlexeyAB/darknet#how-to-compile-on-windows)](#neural-network-for-object-detection---tensor-cores-can-be-used-on-linux-and-windows)
+- ["You Only Look Once: Unified, Real-Time Object Detection (versions 2 & 3)"](#you-only-look-once-unified-real-time-object-detection-versions-2--3)
+        - [Requirements:](#requirements)
+        - [Pre-trained models](#pre-trained-models)
+        - [Examples of results:](#examples-of-results)
+    - [Improvements in this repository](#improvements-in-this-repository)
+    - [How to use:](#how-to-use)
+        - [How to use on the command line:](#how-to-use-on-the-command-line)
+        - [For using network video-camera mjpeg-stream with any Android smartphone:](#for-using-network-video-camera-mjpeg-stream-with-any-android-smartphone)
+    - [How to compile on Linux:](#how-to-compile-on-linux)
+    - [How to compile on Windows:](#how-to-compile-on-windows)
+    - [How to compile (custom):](#how-to-compile-custom)
+  - [How to train (Pascal VOC Data):](#how-to-train-pascal-voc-data)
+  - [How to train with multi-GPU:](#how-to-train-with-multi-gpu)
+  - [How to train (to detect your custom objects):](#how-to-train-to-detect-your-custom-objects)
+    - [How to train tiny-yolo (to detect your custom objects):](#how-to-train-tiny-yolo-to-detect-your-custom-objects)
+  - [When should I stop training:](#when-should-i-stop-training)
+    - [How to calculate mAP on PascalVOC 2007:](#how-to-calculate-map-on-pascalvoc-2007)
+    - [Custom object detection:](#custom-object-detection)
+  - [How to improve object detection:](#how-to-improve-object-detection)
+  - [How to mark bounded boxes of objects and create annotation files:](#how-to-mark-bounded-boxes-of-objects-and-create-annotation-files)
+  - [Using Yolo9000](#using-yolo9000)
+  - [How to use Yolo as DLL and SO libraries](#how-to-use-yolo-as-dll-and-so-libraries)
 
 
 
@@ -606,3 +615,21 @@ public:
 #endif
 };
 ```
+    
+----
+
+sudo ln -sf ~/darknet /darknet
+
+cp <PATH_IMGS_TRAIN> ~/darknet/data/obj/
+cp <PATH_IMGS_VALID> ~/darknet/data/valid/
+
+cd ~/darknet
+
+python generate-train-txt.py
+python generate-valid-txt.py
+
+./darknet detector train data/obj.data cfg/yolov3_custom.cfg darknet53.conv.74 -map -dont_show 2>&1 > ~/darknet/backup/training_output.txt
+
+./darknet detector train data/obj.data cfg/yolov3_custom.cfg darknet53.conv.74 -map -dont_show | tee ~/darknet/backup/training_output.txt
+
+./darknet detector train data/obj.data cfg/yolov3_custom.cfg ~/darknet/backup/yolov3_custom_last.weights -map -dont_show 2>&1 > ~/darknet/backup/training_output.txt

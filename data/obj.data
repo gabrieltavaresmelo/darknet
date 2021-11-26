@@ -1,0 +1,6 @@
+classes = 2
+train = data/train.txt
+valid = data/valid.txt
+names = data/obj.names
+#backup = /mydrive/bucket-storage/06112021_TRAIN_V2/backup
+backup = /darknet/backup
